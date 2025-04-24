@@ -1,0 +1,34 @@
+[build-system]
+requires = ["flit_core >=3.2,<4"]
+build-backend = "flit_core.buildapi"
+
+[project]
+name = "etl_ws_3"
+version = "0.0.1"
+description = "Train a regression model with all the EDA and feature selection, stream the data using kafka, use the trained model to predict values of the testing dataset and extract a performance met"
+authors = [
+  { name = "Natalia L\udcc3opez Gallego" },
+]
+
+readme = "README.md"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    
+]
+
+[tool.black]
+line-length = 99
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.git
+  | \.venv
+)/
+'''
+
+[tool.isort]
+profile = "black"
+known_first_party = ["etl_ws_3"]
+force_sort_within_sections = true
+
+
