@@ -43,7 +43,7 @@ CREATE TABLE IF NOT EXISTS predicted_data (
     freedom FLOAT,
     family FLOAT,
     health FLOAT,
-    economy_t-1_x_health_t-1 FLOAT,
+    economy_t1_x_health_t1 FLOAT,
     family_generosity_ratio FLOAT,
     continent VARCHAR(50),
     happiness_score FLOAT,
@@ -51,7 +51,7 @@ CREATE TABLE IF NOT EXISTS predicted_data (
     economy_health_ratio FLOAT,
     health_x_country_economy_mean FLOAT,
     economy FLOAT,
-    family_t-1_x_freedom_t-1 FLOAT,
+    family_t1_x_freedom_t1 FLOAT,
     country_economy_mean FLOAT,
     predicted_happiness_score FLOAT,
     timestamp TIMESTAMP UNIQUE
@@ -85,9 +85,9 @@ except Exception as e:
 
 # Feature columns for prediction
 feature_columns = [
-    'health_x_economy', 'freedom', 'family', 'health', 'economy_t-1_x_health_t-1',
+    'health_x_economy', 'freedom', 'family', 'health', 'economy_t1_x_health_t1',
     'family_generosity_ratio', 'trust', 'economy_health_ratio',
-    'health_x_country_economy_mean', 'economy', 'family_t-1_x_freedom_t-1',
+    'health_x_country_economy_mean', 'economy', 'family_t1_x_freedom_t1',
     'country_economy_mean'
 ]
 
@@ -101,8 +101,8 @@ final_feature_order = feature_columns + expected_continents
 
 # Rename incorrectly named keys if needed
 rename_keys = {
-    'economy_t1_x_health_t1': 'economy_t-1_x_health_t-1',
-    'family_t1_x_freedom_t1': 'family_t-1_x_freedom_t-1'
+    'economy_t-1_x_health_t-1': 'economy_t1_x_health_t1',
+    'family_t-1_x_freedom_t-1': 'family_t1_x_freedom_t1'
 }
 
 # Process messages
@@ -135,16 +135,16 @@ for message in consumer:
 
         insert_query = """
         INSERT INTO predicted_data (
-            health_x_economy, freedom, family, health, economy_t-1_x_health_t-1,
+            health_x_economy, freedom, family, health, economy_t1_x_health_t1,
             family_generosity_ratio, continent, happiness_score, trust,
             economy_health_ratio, health_x_country_economy_mean, economy,
-            family_t-1_x_freedom_t-1, country_economy_mean, predicted_happiness_score,
+            family_t1_x_freedom_t1, country_economy_mean, predicted_happiness_score,
             timestamp
         ) VALUES (
-            :health_x_economy, :freedom, :family, :health, :economy_t-1_x_health_t-1,
+            :health_x_economy, :freedom, :family, :health, :economy_t1_x_health_t1,
             :family_generosity_ratio, :continent, :happiness_score, :trust,
             :economy_health_ratio, :health_x_country_economy_mean, :economy,
-            :family_t-1_x_freedom_t-1, :country_economy_mean, :predicted_happiness_score,
+            :family_t1_x_freedom_t1, :country_economy_mean, :predicted_happiness_score,
             :timestamp
         )
         ON CONFLICT (timestamp) DO UPDATE SET
@@ -152,7 +152,7 @@ for message in consumer:
             freedom = EXCLUDED.freedom,
             family = EXCLUDED.family,
             health = EXCLUDED.health,
-            economy_t-1_x_health_t-1 = EXCLUDED.economy_t-1_x_health_t-1,
+            economy_t1_x_health_t1 = EXCLUDED.economy_t1_x_health_t1,
             family_generosity_ratio = EXCLUDED.family_generosity_ratio,
             continent = EXCLUDED.continent,
             happiness_score = EXCLUDED.happiness_score,
@@ -160,7 +160,7 @@ for message in consumer:
             economy_health_ratio = EXCLUDED.economy_health_ratio,
             health_x_country_economy_mean = EXCLUDED.health_x_country_economy_mean,
             economy = EXCLUDED.economy,
-            family_t-1_x_freedom_t-1 = EXCLUDED.family_t-1_x_freedom_t-1,
+            family_t1_x_freedom_t1 = EXCLUDED.family_t1_x_freedom_t1,
             country_economy_mean = EXCLUDED.country_economy_mean,
             predicted_happiness_score = EXCLUDED.predicted_happiness_score
         """

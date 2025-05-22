@@ -24,14 +24,19 @@ except Exception as e:
     logger.error(f"Failed to initialize Kafka Producer: {e}")
     exit(1)
 
-# Define file paths for datasets
-data_files = [
-    "data/external/2015.csv",
-    "data/external/2016.csv",
-    "data/external/2017.csv",
-    "data/external/2018.csv",
-    "data/external/2019.csv"
-]
+import os
+
+base_dir = os.path.dirname(os.path.abspath(__file__))
+data_dir = os.path.join(base_dir, "data", "external")
+
+import os
+
+# Directorio base del proyecto (dos niveles arriba del script)
+base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))  # Esto apunta a /home/ntlg2/etl-workshop-3
+
+data_dir = os.path.join(base_dir, "data", "external")
+
+data_files = [os.path.join(data_dir, f"{year}.csv") for year in range(2015, 2020)]
 
 
 # Load datasets
@@ -172,26 +177,26 @@ combined_df['continent'] = combined_df['country'].apply(get_continent)
 
 # Feature engineering
 combined_df['health_x_economy'] = combined_df['health'] * combined_df['economy']
-combined_df['economy_t-1'] = combined_df.groupby('country')['economy'].shift(1)
-combined_df['health_t-1'] = combined_df.groupby('country')['health'].shift(1)
-combined_df['economy_t-1_x_health_t-1'] = combined_df['economy_t-1'] * combined_df['health_t-1']
+combined_df['economy_t1'] = combined_df.groupby('country')['economy'].shift(1)
+combined_df['health_t1'] = combined_df.groupby('country')['health'].shift(1)
+combined_df['economy_t1_x_health_t1'] = combined_df['economy_t1'] * combined_df['health_t1']
 combined_df['family_generosity_ratio'] = combined_df['family'] / (combined_df['generosity'] + 1e-6)
 combined_df['economy_health_ratio'] = combined_df['economy'] / (combined_df['health'] + 1e-6)
 combined_df['country_economy_mean'] = combined_df.groupby('country')['economy'].transform('mean')
 combined_df['health_x_country_economy_mean'] = combined_df['health'] * combined_df['country_economy_mean']
-combined_df['family_t-1'] = combined_df.groupby('country')['family'].shift(1)
-combined_df['freedom_t-1'] = combined_df.groupby('country')['freedom'].shift(1)
-combined_df['family_t-1_x_freedom_t-1'] = combined_df['family_t-1'] * combined_df['freedom_t-1']
+combined_df['family_t1'] = combined_df.groupby('country')['family'].shift(1)
+combined_df['freedom_t1'] = combined_df.groupby('country')['freedom'].shift(1)
+combined_df['family_t1_x_freedom_t1'] = combined_df['family_t1'] * combined_df['freedom_t1']
 
 # Drop rows with missing temporal features
 df_final = combined_df.dropna()
 
 # Define alternative columns
 alt_columns = [
-    'health_x_economy', 'freedom', 'family', 'health', 'economy_t-1_x_health_t-1',
+    'health_x_economy', 'freedom', 'family', 'health', 'economy_t1_x_health_t1',
     'family_generosity_ratio', 'continent', 'happiness_score', 'trust',
     'economy_health_ratio', 'health_x_country_economy_mean', 'economy',
-    'family_t-1_x_freedom_t-1', 'country_economy_mean'
+    'family_t1_x_freedom_t1', 'country_economy_mean'
 ]
 
 # Ensure all columns exist
