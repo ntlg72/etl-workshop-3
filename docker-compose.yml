@@ -1,8 +1,6 @@
-version: '3.8'
-
 services:
   zookeeper:
-    image: confluentinc/cp-zookeeper:7.0.1
+    image: confluentinc/cp-zookeeper:latest
     hostname: zookeeper
     container_name: zookeeper_ws3
     ports:
@@ -12,7 +10,7 @@ services:
       ZOOKEEPER_TICK_TIME: 2000
 
   kafka:
-    image: confluentinc/cp-kafka:7.0.1
+    image: confluentinc/cp-kafka:latest
     hostname: kafka
     container_name: kafka_ws3
     depends_on:

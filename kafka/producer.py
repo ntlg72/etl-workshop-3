@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import json
+import time
 from kafka import KafkaProducer
 import logging
 import re
@@ -25,12 +26,13 @@ except Exception as e:
 
 # Define file paths for datasets
 data_files = [
-    "../data/external/2015.csv",
-    "../data/external/2016.csv",
-    "../data/external/2017.csv",
-    "../data/external/2018.csv",
-    "../data/external/2019.csv"
+    "data/external/2015.csv",
+    "data/external/2016.csv",
+    "data/external/2017.csv",
+    "data/external/2018.csv",
+    "data/external/2019.csv"
 ]
+
 
 # Load datasets
 dfs = {}
@@ -198,7 +200,7 @@ if missing_cols:
     logger.error(f"Missing columns: {missing_cols}")
     exit(1)
 
-# Send each row to Kafka
+# Send each row to Kafka with 0.5s delay
 for _, row in df_final[alt_columns].iterrows():
     try:
         row_dict = row.to_dict()
@@ -206,6 +208,9 @@ for _, row in df_final[alt_columns].iterrows():
         row_dict = {k: (None if pd.isna(v) else v) for k, v in row_dict.items()}
         producer.send('happiness_data', value=row_dict)
         logger.info(f"Sent row to Kafka topic 'happiness_data': {row_dict}")
+        
+        time.sleep(0.5) 
+        
     except Exception as e:
         logger.error(f"Failed to send row to Kafka: {e}")
         continue

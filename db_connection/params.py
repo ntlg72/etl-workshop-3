@@ -21,20 +21,27 @@ class Params:
     ```
     """
 
-    # Load environment variables from .env
-    BASE_DIR = Path("/home/bb-8/etl-workshop-3")
-    load_dotenv(BASE_DIR / ".env")
+    def __init__(self):
+        # Ruta base
+        BASE_DIR = Path("/home/ntlg2/etl-workshop-3")
 
+        # Carga el .env desde ruta absoluta
+        load_dotenv(BASE_DIR / ".env")
 
-    # Logs
-    log_name = BASE_DIR / "log" / "dump.log"
+        # Logs
+        self.log_name = BASE_DIR / "log" / "dump.log"
 
-    # Control flags
-    force_execution = True
+        # Control flags
+        self.force_execution = True
 
-    # Database credentials from .env
-    user = os.getenv("DB_USERNAME")
-    password = os.getenv("DB_PASSWORD")
-    host = os.getenv("DB_HOST")
-    database = os.getenv("DB_DATABASE")
-    port = os.getenv("DB_PORT")
+        # Variables de entorno
+        self.user = os.getenv("DB_USERNAME")
+        self.password = os.getenv("DB_PASSWORD")
+        self.host = os.getenv("DB_HOST")
+        self.database = os.getenv("DB_DATABASE")
+
+        port = os.getenv("DB_PORT")
+        if port is None:
+            self.port = 5434
+        else:
+            self.port = int(port)
