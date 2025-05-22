@@ -4,7 +4,7 @@ services:
   zookeeper:
     image: confluentinc/cp-zookeeper:7.0.1
     hostname: zookeeper
-    container_name: zookeeper
+    container_name: zookeeper_ws3
     ports:
       - "2181:2181"
     environment:
@@ -14,7 +14,7 @@ services:
   kafka:
     image: confluentinc/cp-kafka:7.0.1
     hostname: kafka
-    container_name: kafka
+    container_name: kafka_ws3
     depends_on:
       - zookeeper
     ports:
@@ -31,20 +31,20 @@ services:
       KAFKA_CREATE_TOPICS: "happiness_data:1:1"
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
 
-postgres:
-    image: postgres:13
-    container_name: postgres
-    env_file:
-      - .env
-    environment:
-      POSTGRES_DB: ${DB_DATABASE}
-      POSTGRES_USER: ${DB_USERNAME}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-    ports:
-      - "${DB_PORT}:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-      - ./init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+  postgres:
+      image: postgres:13
+      container_name: postgres_ws3
+      env_file:
+        - .env
+      environment:
+        POSTGRES_DB: ${DB_DATABASE}
+        POSTGRES_USER: ${DB_USERNAME}
+        POSTGRES_PASSWORD: ${DB_PASSWORD}
+      ports:
+        - "${DB_PORT}:5432"
+      volumes:
+        - postgres_data:/var/lib/postgresql/data
+        - ./init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
 
 volumes:
   postgres_data:
