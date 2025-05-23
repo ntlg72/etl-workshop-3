@@ -2,7 +2,7 @@
 
 ## Overview
 
-This project implements a complete process to predict happiness scores across countries using World Happiness Report data from 2015 to 2019. The solution integrates Exploratory Data Analysis (EDA), Extract-Transform-Load (ETL) processes, machine learning model training, real-time data streaming with Kafka, and database storage with PostgreSQL. The trained CatBoost regression model predicts `happiness_score` based on engineered features, with predictions stored for further analysis. This README provides instructions to set up, run, and utilize the project
+This project implements a complete process to predict happiness scores across countries using World Happiness Report data from 2015 to 2019. The solution integrates Exploratory Data Analysis (EDA), Extract-Transform-Load (ETL) processes, machine learning model training, real-time data streaming with Kafka, and database storage with PostgreSQL. The trained CatBoost regression model predicts `happiness_score` based on engineered features, with predictions stored for further analysis. This README provides instructions to set up, run, and utilize the project.
 
 ## Prerequisites
 
